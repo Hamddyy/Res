@@ -92,7 +92,7 @@
                 products = await response.json();
                 renderProducts();
             } else {
-                console.error("Error loading products");
+                console.error("Error loading products:", response.statusText);
             }
         }
 
@@ -134,43 +134,47 @@
 
         // حفظ التعديلات إلى GitHub
         async function saveChanges() {
-            // جلب SHA للملف الحالي
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
-                headers: {
-                    Authorization: `token ${GITHUB_TOKEN}`,
-                    Accept: 'application/vnd.github.v3+json'
+            try {
+                // جلب SHA للملف الحالي
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
+                    headers: {
+                        Authorization: `token ${GITHUB_TOKEN}`,
+                        Accept: 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!response.ok) {
+                    console.error("Error fetching file data:", response.statusText);
+                    return;
                 }
-            });
 
-            if (!response.ok) {
-                console.error("Error fetching file data");
-                return;
-            }
+                const fileData = await response.json();
 
-            const fileData = await response.json();
+                // إرسال البيانات المعدلة
+                const updateResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `token ${GITHUB_TOKEN}`,
+                        Accept: 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({
+                        message: "تحديث المنتجات",
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2)))),
+                        sha: fileData.sha
+                    })
+                });
 
-            // إرسال البيانات المعدلة
-            const updateResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
-                method: 'PUT',
-                headers: {
-                    Authorization: `token ${GITHUB_TOKEN}`,
-                    Accept: 'application/vnd.github.v3+json'
-                },
-                body: JSON.stringify({
-                    message: "تحديث المنتجات",
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(products, null, 2)))),
-                    sha: fileData.sha
-                })
-            });
-
-            if (updateResponse.ok) {
-                alert('تم حفظ التعديلات بنجاح!');
-            } else {
-                console.error("Error saving changes");
+                if (updateResponse.ok) {
+                    alert('تم حفظ التعديلات بنجاح!');
+                } else {
+                    console.error("Error saving changes:", updateResponse.statusText);
+                }
+            } catch (error) {
+                console.error("An error occurred while saving changes:", error);
             }
         }
 
         loadProducts();
     </script>
 </body>
-</html>
+</html>ك

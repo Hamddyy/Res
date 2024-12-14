@@ -80,7 +80,7 @@
     <div class="product-list" id="product-list"></div>
 
     <script>
-        const GITHUB_REPO = "hamddyy/Res";  // قم بتعديل اسم المستخدم واسم المستودع
+        const GITHUB_REPO = "Hamddyy/Res";  // قم بتعديل اسم المستخدم واسم المستودع
         const GITHUB_TOKEN = "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";  // استبدل بـ Personal Access Token الذي حصلت عليه
         const FILE_PATH = "products.json";  // مسار ملف JSON الذي يحتوي على المنتجات
         let products = [];
@@ -88,8 +88,12 @@
         // تحميل المنتجات من ملف JSON
         async function loadProducts() {
             const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_REPO}/main/${FILE_PATH}`);
-            products = await response.json();
-            renderProducts();
+            if (response.ok) {
+                products = await response.json();
+                renderProducts();
+            } else {
+                console.error("Error loading products");
+            }
         }
 
         // عرض المنتجات
@@ -130,15 +134,23 @@
 
         // حفظ التعديلات إلى GitHub
         async function saveChanges() {
+            // جلب SHA للملف الحالي
             const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
                 headers: {
                     Authorization: `token ${GITHUB_TOKEN}`,
                     Accept: 'application/vnd.github.v3+json'
                 }
             });
+
+            if (!response.ok) {
+                console.error("Error fetching file data");
+                return;
+            }
+
             const fileData = await response.json();
 
-            await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
+            // إرسال البيانات المعدلة
+            const updateResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`, {
                 method: 'PUT',
                 headers: {
                     Authorization: `token ${GITHUB_TOKEN}`,
@@ -151,7 +163,11 @@
                 })
             });
 
-            alert('تم حفظ التعديلات بنجاح!');
+            if (updateResponse.ok) {
+                alert('تم حفظ التعديلات بنجاح!');
+            } else {
+                console.error("Error saving changes");
+            }
         }
 
         loadProducts();

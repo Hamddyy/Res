@@ -1,5 +1,10 @@
 [
   {
+    "name": "ساندويتش شاورما",
+    "price": 500,
+    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg"
+  },
+  {
     "name": "ساندويتش فول",
     "price": 30,
     "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho2.jpg"
@@ -10,8 +15,8 @@
     "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho3.jpg"
   },
   {
-    "name": "1",
-    "price": "1",
-    "image": "H"
+    "name": "H",
+    "price": "222",
+    "image": "Hhhy"
   }
 ]

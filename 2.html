@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المنتجات</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        /* شريط علوي ثابت */
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        /* تنسيق مربع البحث داخل الشريط العلوي */
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+        .search-container img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .search-container input {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+        }
+        .search-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        .search-container button:hover {
+            background-color: #0056b3;
+        }
+        /* تنسيق حقل اختيار اللغة */
+        .language-selector {
+            margin-left: 20px;
+            font-size: 16px;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        /* تنسيق القائمة من المنتجات */
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 80px 20px 20px 20px; /* إضافة مساحة أعلى بسبب الشريط الثابت */
+        }
+        .product-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .product-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .product-item h3 {
+            margin: 10px 0;
+        }
+        .product-item p {
+            color: #777;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شريط علوي ثابت -->
+    <header>
+        <h1 id="page-title">إدارة المنتجات</h1>
+        <div class="search-container">
+            <img src="https://via.placeholder.com/40" alt="Logo">
+            <input type="text" id="search-box" placeholder="بحث عن منتج...">
+            <button onclick="searchProduct()">بحث</button>
+        </div>
+        <select id="language-selector" class="language-selector" onchange="changeLanguage()">
+            <option value="ar">العربية</option>
+            <option value="en">English</option>
+            <option value="it">Italiano</option>
+            <option value="ru">Русский</option>
+        </select>
+    </header>
+
+    <!-- قائمة المنتجات -->
+    <div class="product-list" id="product-list"></div>
+
+    <script>
+        let products = [];
+        const translations = {
+            ar: {
+                title: "إدارة المنتجات",
+                searchPlaceholder: "بحث عن منتج...",
+                buttonText: "بحث",
+            },
+            en: {
+                title: "Product Management",
+                searchPlaceholder: "Search for a product...",
+                buttonText: "Search",
+            },
+            it: {
+                title: "Gestione dei Prodotti",
+                searchPlaceholder: "Cerca un prodotto...",
+                buttonText: "Cerca",
+            },
+            ru: {
+                title: "Управление продуктами",
+                searchPlaceholder: "Поиск продукта...",
+                buttonText: "Поиск",
+            },
+        };
+
+        async function loadProducts() {
+            try {
+                const response = await fetch('products.json');
+                if (response.ok) {
+                    products = await response.json();
+                    renderProducts();
+                } else {
+                    alert("فشل تحميل المنتجات. تأكد من وجود الملف products.json");
+                }
+            } catch (error) {
+                console.error("Error loading products:", error);
+            }
+        }
+
+        function renderProducts(filteredProducts = products) {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+            filteredProducts.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                productItem.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <p>السعر: ${product.price} جنيه</p>
+                `;
+                productList.appendChild(productItem);
+            });
+        }
+
+        function searchProduct() {
+            const searchValue = document.getElementById('search-box').value.toLowerCase();
+            const filteredProducts = products.filter(product =>
+                product.name.toLowerCase().includes(searchValue)
+            );
+            renderProducts(filteredProducts);
+        }
+
+        document.getElementById('search-box').addEventListener('input', () => {
+            const searchValue = document.getElementById('search-box').value.toLowerCase();
+            const filteredProducts = products.filter(product =>
+                product.name.toLowerCase().includes(searchValue)
+            );
+            renderProducts(filteredProducts);
+        });
+
+        function changeLanguage() {
+            const selectedLanguage = document.getElementById('language-selector').value;
+            const { title, searchPlaceholder, buttonText } = translations[selectedLanguage];
+
+            document.getElementById('page-title').innerText = title;
+            document.getElementById('search-box').placeholder = searchPlaceholder;
+            document.querySelector('.search-container button').innerText = buttonText;
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>

@@ -19,4 +19,20 @@
     "price": "6",
     "image": "H"
   }
+  {
+    "name": "ساندويتش شاورما",
+    "price": 500,
+    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg"
+  },
+  {
+    "name": "ساندويتش فول",
+    "price": 30,
+    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho2.jpg"
+  },
+  {
+    "name": "عصير برتقال",
+    "price": 15,
+    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho3.jpg"
+  },
+  
 ]

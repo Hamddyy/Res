@@ -13,5 +13,10 @@
     "name": "عصير برتقال",
     "price": 15,
     "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho3.jpg"
+  },
+  {
+    "name": "C",
+    "price": "8",
+    "image": "C"
   }
 ]

@@ -18,5 +18,10 @@
     "name": "C",
     "price": "8",
     "image": "C"
+  },
+  {
+    "name": "N",
+    "price": "8",
+    "image": "N"
   }
 ]

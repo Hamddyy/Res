@@ -1,13 +1,15 @@
 [
   {
     "name": "ساندويتش شاورما",
-    "price": 500,
-    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg"
+    "price": "500",
+    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg",
+    "description": "وصف"
   },
   {
     "name": "ساندويتش فول",
-    "price": 30,
-    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho2.jpg"
+    "price": "30",
+    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho2.jpg",
+    "description": "وصف"
   },
   {
     "name": "عصير برتقال",
@@ -17,22 +19,25 @@
   {
     "name": "C",
     "price": "8",
-    "image": "C"
+    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg",
+    "description": "وصف"
   },
   {
     "name": "N",
     "price": "8",
-    "image": "N"
+    "image": "N",
+    "description": "وصف"
   },
   {
     "name": "10",
     "price": "10",
-    "image": "H",
+    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg",
     "description": "Hhhhhhhhhh"
   },
   {
     "name": "10.20",
     "price": "20",
-    "image": "Hhh"
+    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg",
+    "description": " "
   }
 ]

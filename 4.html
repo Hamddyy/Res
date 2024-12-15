@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سلة الشراء</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        /* شريط علوي ثابت */
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+        .search-container img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .search-container input {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+        }
+        .search-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        .search-container button:hover {
+            background-color: #0056b3;
+        }
+        .language-selector {
+            margin-left: 20px;
+            font-size: 16px;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cart-header {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 50px;
+            left: 0;
+            right: 0;
+            z-index: 999;
+        }
+        .cart-header img {
+            width: 30px;
+            height: 30px;
+        }
+        .cart-header .cart-info {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+        .cart-header .cart-info span {
+            font-size: 14px;
+        }
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 120px 20px 20px 20px; /* إضافة مساحة أعلى بسبب الشريط الثابت */
+        }
+        .product-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .product-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            transition: border 0.3s ease;
+        }
+        .product-item img.active {
+            border: 4px solid #007bff;
+        }
+        .product-item h3 {
+            margin: 10px 0;
+        }
+        .product-item p {
+            color: #777;
+            font-size: 14px;
+        }
+        .product-item button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .product-item button:hover {
+            background-color: #0056b3;
+        }
+        .product-item.active {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+        /* سلة المشتريات */
+        .cart {
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .cart img {
+            width: 40px;
+            height: 40px;
+        }
+        .cart-details {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شريط علوي ثابت -->
+    <header>
+        <h1 id="page-title">سلة الشراء</h1>
+        <div class="search-container">
+            <img src="https://via.placeholder.com/40" alt="Logo">
+            <input type="text" id="search-box" placeholder="بحث عن منتج...">
+            <button onclick="searchProduct()">بحث</button>
+        </div>
+        <select id="language-selector" class="language-selector" onchange="changeLanguage()">
+            <option value="ar">العربية</option>
+            <option value="en">English</option>
+            <option value="it">Italiano</option>
+            <option value="ru">Русский</option>
+        </select>
+    </header>
+
+    <!-- شريط سلة المشتريات -->
+    <div class="cart-header">
+        <div class="cart-info">
+            <span id="cart-count">عدد السلع: 0</span>
+            <span id="cart-total">إجمالي السعر: 0 جنيه</span>
+        </div>
+        <img src="https://via.placeholder.com/40" alt="Cart">
+    </div>
+
+    <!-- قائمة المنتجات -->
+    <div class="product-list" id="product-list"></div>
+
+    <!-- سلة المشتريات -->
+    <div class="cart" id="cart-details" style="display: none;">
+        <h2>تفاصيل السلة</h2>
+        <div id="cart-items"></div>
+    </div>
+
+    <script>
+        let products = [];
+        let cart = [];
+        const translations = {
+            ar: {
+                title: "سلة الشراء",
+                searchPlaceholder: "بحث عن منتج...",
+                buttonText: "بحث",
+                cartText: "عدد السلع: ",
+                totalText: "إجمالي السعر: ",
+            },
+            en: {
+                title: "Shopping Cart",
+                searchPlaceholder: "Search for a product...",
+                buttonText: "Search",
+                cartText: "Items: ",
+                totalText: "Total: ",
+            },
+            it: {
+                title: "Carrello degli acquisti",
+                searchPlaceholder: "Cerca un prodotto...",
+                buttonText: "Cerca",
+                cartText: "Elementi: ",
+                totalText: "Totale: ",
+            },
+            ru: {
+                title: "Корзина покупок",
+                searchPlaceholder: "Поиск продукта...",
+                buttonText: "Поиск",
+                cartText: "Товары: ",
+                totalText: "Итого: ",
+            },
+        };
+
+        async function loadProducts() {
+            try {
+                const response = await fetch('products.json');
+                if (response.ok) {
+                    products = await response.json();
+                    renderProducts();
+                } else {
+                    alert("فشل تحميل المنتجات. تأكد من وجود الملف products.json");
+                }
+            } catch (error) {
+                console.error("Error loading products:", error);
+            }
+        }
+
+        function renderProducts(filteredProducts = products) {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+            filteredProducts.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                productItem.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <p>السعر: ${product.price} جنيه</p>
+                    <button onclick="addToCart(${product.name}, ${product.price})">شراء</button>
+                `;
+                productItem.addEventListener('click', () => toggleZoom(productItem));
+                productList.appendChild(productItem);
+            });
+        }
+
+        function toggleZoom(productItem) {
+            if (productItem.classList.contains('active')) {
+                productItem.classList.remove('active');
+            } else {
+                const allProducts = document.querySelectorAll('.product-item');
+                allProducts.forEach(item => item.classList.remove('active'));
+                productItem.classList.add('active');
+            }
+        }
+
+        function addToCart(productName, productPrice) {
+            cart.push({ name: productName, price: productPrice });
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+            const cartItems = document.getElementById('cart-items');
+            let total = 0;
+            cartItems.innerHTML = '';
+
+            cart.forEach(item => {
+                total += item.price;
+                const cartItem = document.createElement('div');
+                cartItem.textContent = `${item.name} - ${item.price} جنيه`;
+                cartItems.appendChild(cartItem);
+            });
+
+            cartCount.textContent = `عدد السلع: ${cart.length}`;
+            cartTotal.textContent = `إجمالي السعر: ${total} جنيه`;
+            document.getElementById('cart-details').style.display = cart.length > 0 ? 'block' : 'none';
+        }
+
+        function searchProduct() {
+            const searchValue = document.getElementById('search-box').value.toLowerCase();
+            const filteredProducts = products.filter(product =>
+                product.name.toLowerCase().includes(searchValue)
+            );
+            renderProducts(filteredProducts);
+        }
+
+        document.getElementById('search-box').addEventListener('input', () => {
+            const searchValue = document.getElementById('search-box').value.toLowerCase();
+            const filteredProducts = products.filter(product =>
+                product.name.toLowerCase().includes(searchValue)
+            );
+            renderProducts(filteredProducts);
+        });
+
+        function changeLanguage() {
+            const selectedLanguage = document.getElementById('language-selector').value;
+            const { title, searchPlaceholder, buttonText, cartText, totalText } = translations[selectedLanguage];
+
+            document.getElementById('page-title').innerText = title;
+            document.getElementById('search-box').placeholder = searchPlaceholder;
+            document.querySelector('.search-container button').innerText = buttonText;
+            document.getElementById('cart-count').innerText = `${cartText} 0`;
+            document.getElementById('cart-total').innerText = `${totalText} 0`;
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>

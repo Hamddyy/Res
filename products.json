@@ -33,5 +33,11 @@
     "price": "20",
     "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg",
     "description": " "
+  },
+  {
+    "name": "Sandwich ",
+    "price": "200",
+    "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg",
+    "description": "Sandwich "
   }
 ]

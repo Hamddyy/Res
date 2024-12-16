@@ -23,12 +23,6 @@
     "description": "وصف"
   },
   {
-    "name": "N",
-    "price": "8",
-    "image": "N",
-    "description": "وصف"
-  },
-  {
     "name": "10",
     "price": "10",
     "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg",

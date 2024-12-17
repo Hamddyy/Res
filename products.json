@@ -1,9 +1,11 @@
 [
   {
+    "id": "1",
     "name": "ساندويتش شاورما",
     "price": "500",
     "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg",
-    "description": "وصف"
+    "description": "وصف",
+    "category": "undefined"
   },
   {
     "name": "ساندويتش فول",

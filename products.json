@@ -5,19 +5,23 @@
     "price": "500",
     "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho1.jpg",
     "description": "وصف",
-    "category": "undefined"
+    "category": "Food "
   },
   {
+    "id": "2",
     "name": "ساندويتش فول",
     "price": "100",
     "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho2.jpg",
-    "description": "وصف"
+    "description": "وصف",
+    "category": "Food "
   },
   {
+    "id": "3",
     "name": "عصير برتقال",
     "price": "100",
     "image": "https://raw.githubusercontent.com/Hamddyy/Res/refs/heads/main/images/soho3.jpg",
-    "description": "undefined"
+    "description": "undefined",
+    "category": "Bev"
   },
   {
     "name": "Food",

@@ -263,4 +263,24 @@
         }
 
         document.getElementById('search-box').addEventListener('input', () => {
-            const search
+            const searchValue = document.getElementById('search-box').value.toLowerCase();
+            const filteredProducts = products.filter(product =>
+                product.name.toLowerCase().includes(searchValue)
+            );
+            renderProducts(filteredProducts);
+        });
+
+        function changeLanguage() {
+            const selectedLanguage = document.getElementById('language-selector').value;
+            const { title, searchPlaceholder, buttonText } = translations[selectedLanguage];
+
+            document.getElementById('page-title').innerText = title;
+            document.getElementById('search-box').placeholder = searchPlaceholder;
+            document.querySelector('.search-container button').innerText = buttonText;
+        }
+
+        loadProducts();
+    </script>
+    <script src="js/script.js"></script>
+</body>
+</html>
